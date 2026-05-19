@@ -1,20 +1,27 @@
 import { NextRequest } from "next/server";
-
-export function GET() {
-    return Response.json({
-        email : "harsh@gmail.com",
-        pass : "123"
-    })
-}
+import { prisma } from "../../../lib/db";
 
 export async function POST(req: NextRequest) {
-  // extract the body
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  // store the body in the database
-  console.log(body);
+    const user = await prisma.user.create({
+      data: {
+        name: body.username,
+        email: body.email,
+        password: body.password, 
+      },
+    });
 
-  return Response.json({
-    message: "You are logged in!",
-  });
+    console.log(user);
+
+    return Response.json({
+      message: "User created successfully!",
+      user,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return Response.json({ message: "Error while creating user" }, { status: 500 });
+  }
 }
