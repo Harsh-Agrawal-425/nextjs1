@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { signup } from "@/app/actions/user";
+import { sign } from "crypto";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -9,20 +11,16 @@ function Signup() {
   const [password, setPassword] = useState("");
 
   async function sendRequest() {
-    try {
-      const response = await axios.post("/api/user", {
-        username,
-        email,
-        password,
-      });
+  try {
+    const response = await signup(username, email, password);
 
-      alert(response.data.message);
+    alert(response.message);
 
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    }
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong");
   }
+}
 
   return (
     <div className="h-screen flex justify-center flex-col bg-gray-100">
